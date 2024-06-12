@@ -2,11 +2,35 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, clearAuth } from "@/redux/auth/auth.slice";
 import { RootState } from "@/redux/store";
+import axios from "axios";
 
 const useAuthSession = () => {
+
+  // Get the user and token from the Redux store
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
-  //  implement the logic here to check user session
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  // Check if the user is authenticated
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
+        const response = await axios.get('/api/auth/session', { headers: authHeader });
+        const user = response.data.user
+        if (user) {
+          dispatch(setUser({ username: user.username }));
+        } else {
+          dispatch(clearAuth());
+        }
+      } catch (error) {
+        dispatch(clearAuth());
+      }
+    };
+
+    checkAuth();
+  }, [token, dispatch]);
+
   return user;
 };
 
