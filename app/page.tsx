@@ -18,7 +18,7 @@ const HomePage = () => {
   const handleLogin = async () => {
     try {
       // Validate the form
-      if (username.length < 1 || password.length < 6) {
+      if (username.length === 0 || password.length < 8) {
         toast.error("Please enter valid credentials");
         return;
       }
@@ -72,6 +72,7 @@ const HomePage = () => {
             <h2 className="text-2xl font-bold text-center text-[#000]">Login</h2>
             <input
               type="text"
+              required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Username"
@@ -79,10 +80,11 @@ const HomePage = () => {
             />
             <input
               type="password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              minLength={6}
-              placeholder="Password (min 6 characters)"
+              minLength={8}
+              placeholder="Password (min 8 characters)"
               className="w-full px-4 py-2 mt-4 border text-[#000] rounded-md"
             />
             <button
